@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Class Connect</title>
+<style>
+  body { font-family: Arial; padding: 20px; }
+  .section { display: none; }
+  .active { display: block; }
+  #chatBox { border: 1px solid #aaa; height: 200px; padding: 5px; overflow-y: scroll; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <h2>Login</h2>
+  <input id="name" placeholder="Your Name"><br>
+  <input id="idNum" placeholder="Student ID"><br>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- MAIN UI -->
+<div id="main" style="display:none;">
+  <h2 id="welcome"></h2>
+
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('ann')">Announcements</button>
+  <button onclick="show('chat')">Chat</button>
+  <button onclick="logout()">Logout</button>
+
+  <!-- HOME -->
+  <div id="home" class="section active">
+    <h3>Home</h3>
+    <p>Welcome to Class Connect!</p>
+  </div>
+
+  <!-- ANNOUNCEMENTS -->
+  <div id="ann" class="section">
+    <h3>Announcements</h3>
+    <ul id="annList"></ul>
+    <input id="annInput" placeholder="Add announcement">
+    <button onclick="addAnn()">Post</button>
+  </div>
+
+  <!-- CHAT -->
+  <div id="chat" class="section">
+    <h3>Chat</h3>
+    <div id="chatBox"></div>
+    <input id="chatInput" placeholder="Type message">
+    <button onclick="send()">Send</button>
+  </div>
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// LOGIN
+function login() {
+  let name = document.getElementById("name").value;
+  let id = document.getElementById("idNum").value;
+
+  if (!name || !id) return alert("Enter name and ID");
+
+  localStorage.setItem("name", name);
+  localStorage.setItem("id", id);
+
+  document.getElementById("welcome").textContent = "Welcome, " + name;
+  document.getElementById("login").style.display = "none";
+  document.getElementById("main").style.display = "block";
+
+  loadData();
+}
+
+function logout() {
+  localStorage.clear();
+  location.reload();
+}
+
+// ANNOUNCEMENTS
+function addAnn() {
+  let txt = document.getElementById("annInput").value;
+  if (!txt) return;
+
+  let list = JSON.parse(localStorage.getItem("ann") || "[]");
+  list.push(txt);
+  localStorage.setItem("ann", JSON.stringify(list));
+  document.getElementById("annInput").value = "";
+  loadData();
+}
+
+// CHAT
+function send() {
+  let msg = document.getElementById("chatInput").value;
+  if (!msg) return;
+
+  let name = localStorage.getItem("name");
+  let chat = JSON.parse(localStorage.getItem("chat") || "[]");
+
+  chat.push(name + ": " + msg);
+  localStorage.setItem("chat", JSON.stringify(chat));
+  document.getElementById("chatInput").value = "";
+  loadData();
+}
+
+// LOAD DATA
+function loadData() {
+  // Announcements
+  let annList = JSON.parse(localStorage.getItem("ann") || "[]");
+  document.getElementById("annList").innerHTML = "";
+  annList.forEach(a => {
+    let li = document.createElement("li");
+    li.textContent = a;
+    document.getElementById("annList").appendChild(li);
+  });
+
+  // Chat
+  let chats = JSON.parse(localStorage.getItem("chat") || "[]");
+  let box = document.getElementById("chatBox");
+  box.innerHTML = "";
+  chats.forEach(c => {
+    let p = document.createElement("p");
+    p.textContent = c;
+    box.appendChild(p);
+  });
+}
+
+// AUTO LOGIN
+window.onload = () => {
+  if (localStorage.getItem("name")) {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("main").style.display = "block";
+    document.getElementById("welcome").textContent = 
+      "Welcome, " + localStorage.getItem("name");
+    loadData();
+  }
+};
+</script>
+</body>
+</html>

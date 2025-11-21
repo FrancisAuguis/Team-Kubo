@@ -44,3 +44,18 @@
     <button onclick="sendMessage()">Send</button>
   </div>
 </div>
+
+<script>
+
+  function showSection(id) {
+  document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+// Announcements
+function addAnnouncement() {
+  const input = document.getElementById('announcementInput');
+  if (!input.value.trim()) return;
+}
+  const announcements = JSON.parse(localStorage.getItem('allAnnouncements') || '[]');
+  announcements.push({ text: input.value });
