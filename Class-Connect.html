@@ -28,3 +28,19 @@
   <a href="#" onclick="showSection('home')">Home</a> |
   <a href="#" onclick="showSection('announcements')">Announcements</a> |
   <a href="#" onclick="showSection('chat')">Chat</a>
+
+    <div id="announcements" class="section" style="display:none;">
+
+  <h2>Announcements</h2>
+    <ul id="announcementList"></ul>
+    <input id="announcementInput" placeholder="Add announcement..." />
+    <button onclick="addAnnouncement()">Post</button>
+  </div>
+
+  <div id="chat" class="section" style="display:none;">
+    <h2>Class Chat</h2>
+    <div id="chatBox" style="border:1px solid #000; height:200px; overflow:auto;"></div>
+    <input id="chatInput" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
